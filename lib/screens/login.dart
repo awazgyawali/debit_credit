@@ -178,6 +178,19 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 GestureDetector(
+                  onTap: () {
+                    FirebaseHelper().loginWithFacebook().then((data) {
+                      if (data != null)
+                        Navigator.pushReplacementNamed(context, "/home");
+                    }).catchError((err) {
+                      print(err);
+                      if (err is PlatformException)
+                        showSnackbar(err.details);
+                      else
+                        showSnackbar(
+                            "Something went wrong, please try again later.");
+                    });
+                  },
                   child: Container(
                     padding: EdgeInsets.all(20),
                     margin: EdgeInsets.all(20),
@@ -197,6 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FirebaseHelper().loginWithGoogle().then((data) {
                       Navigator.pushReplacementNamed(context, "/home");
                     }).catchError((err) {
+                      print(err);
                       if (err is PlatformException)
                         showSnackbar(err.details);
                       else

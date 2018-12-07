@@ -23,13 +23,14 @@ dev_dependencies:
   cloud_firestore:
   firebase_storage:
   firebase_messaging:
-  firebase_admob:
+  # firebase_admob:
   firebase_performance:
   shared_preferences:
   image_picker:
   path_provider:
   image:
   google_sign_in:
+  flutter_facebook_login:
 
 flutter:
 

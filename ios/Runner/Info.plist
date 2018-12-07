@@ -14,8 +14,6 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>debit_credit</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Click allow to choose an image as your profile picture.</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -37,6 +35,30 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Click allow to choose an image as your profile picture.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+			<dict>
+					<key>CFBundleURLSchemes</key>
+					<array>
+							<string>fb957832254248978</string>
+					</array>
+			</dict>
+	</array>
+
+	<key>FacebookAppID</key>
+	<string>957832254248978</string>
+	<key>FacebookDisplayName</key>
+	<string>Debit Credit</string>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+			<string>fbapi</string>
+			<string>fb-messenger-share-api</string>
+			<string>fbauth2</string>
+			<string>fbshareextension</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
