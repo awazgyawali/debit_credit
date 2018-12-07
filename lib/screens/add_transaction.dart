@@ -12,7 +12,7 @@ class AddTransactionScreen extends StatefulWidget {
 }
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
-  var ie = "income";
+  var ie = "debit";
   var currentAccount;
 
   @override
@@ -63,14 +63,36 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               iconSize: 0,
                               isDense: true,
                               isExpanded: true,
-                              hint: Text("Select Friend"),
+                              hint: Text("Select Account"),
                               value: currentAccount,
                               onChanged: (value) {
-                                setState(() {
-                                  currentAccount = value;
-                                });
+                                if (value == "add")
+                                  Navigator.pushNamed(context, "/addaccount");
+                                else
+                                  setState(() {
+                                    currentAccount = value;
+                                  });
                               },
                               items: [
+                                DropdownMenuItem(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        "Add Account",
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                      Icon(
+                                        MdiIcons.accountPlus,
+                                        color: Theme.of(context).primaryColor,
+                                      )
+                                    ],
+                                  ),
+                                  value: "add",
+                                ),
                                 DropdownMenuItem(
                                   child: Text("Aawaz"),
                                   value: "aawaz",

@@ -4,7 +4,7 @@ class IncomeExpense extends StatelessWidget {
   final value;
   final onChanged;
 
-  IncomeExpense({this.value = "income", this.onChanged});
+  IncomeExpense({this.value = "debit", this.onChanged});
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -18,8 +18,8 @@ class IncomeExpense extends StatelessWidget {
           Expanded(
             child: RadioListTile(
               isThreeLine: false,
-              title: Text("Income"),
-              value: "income",
+              title: Text("Debit"),
+              value: "debit",
               groupValue: value,
               onChanged: onChanged,
             ),
@@ -31,8 +31,8 @@ class IncomeExpense extends StatelessWidget {
           ),
           Expanded(
             child: RadioListTile(
-              title: Text("Expense"),
-              value: "expense",
+              title: Text("Credit"),
+              value: "credit",
               groupValue: value,
               onChanged: onChanged,
             ),
