@@ -29,6 +29,7 @@ dev_dependencies:
   image_picker:
   path_provider:
   image:
+  google_sign_in:
 
 flutter:
 

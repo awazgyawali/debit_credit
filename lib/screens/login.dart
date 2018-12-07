@@ -193,7 +193,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    FirebaseHelper().loginWithGoogle().then((data) {
+                      Navigator.pushReplacementNamed(context, "/home");
+                    }).catchError((err) {
+                      if (err is PlatformException)
+                        showSnackbar(err.details);
+                      else
+                        showSnackbar(
+                            "Something went wrong, please try again later.");
+                    });
+                  },
                   child: Container(
                     padding: EdgeInsets.all(20),
                     margin: EdgeInsets.all(20),

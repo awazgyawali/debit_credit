@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:image/image.dart' as Im;
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -47,6 +48,17 @@ class FirebaseHelper {
       "provider_id": user.providerId
     });
     await init();
+  }
+
+  Future loginWithGoogle() async {
+    GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+    GoogleSignInAccount account = await _googleSignIn.signIn();
+    GoogleSignInAuthentication authentication = await account.authentication;
+
+    user = await _auth.signInWithGoogle(
+        idToken: authentication.idToken,
+        accessToken: authentication.accessToken);
+    return user;
   }
 
   forgotPassword(email) {
