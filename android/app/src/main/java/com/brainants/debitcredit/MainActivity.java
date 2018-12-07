@@ -1,4 +1,4 @@
-package com.example.debitcredit;
+package com.brainants.debitcredit;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

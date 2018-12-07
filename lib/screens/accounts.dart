@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../helper.dart';
+
 class AccountsScreen extends StatefulWidget {
   _AccountsScreenState createState() => _AccountsScreenState();
 }
@@ -8,25 +10,73 @@ class AccountsScreen extends StatefulWidget {
 class _AccountsScreenState extends State<AccountsScreen> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        margin: EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            AccountItem(),
-            Divider(),
-            AccountItem(),
-            Divider(),
-            AccountItem(),
-            Divider(),
-          ],
-        ),
-      ),
+    return StreamBuilder(
+      builder: (context, snapshot) {
+        if (snapshot.error != null)
+          return Center(child: Text("Unable to connect to the server"));
+        else if (snapshot.connectionState == ConnectionState.waiting)
+          return Center(child: CircularProgressIndicator());
+        else if (snapshot.data != null) {
+          var data = snapshot.data.snapshot.value;
+          return ListView.builder(
+            itemCount: data.keys.length,
+            itemBuilder: (context, index) {
+              var account = data[data.keys.toList()[index]];
+              return Container(
+                margin: EdgeInsets.all(10),
+                child: AccountItem(
+                  account,
+                  onDelete: () {
+                    FirebaseHelper().deleteAccount(data.keys.toList()[index]);
+                  },
+                  onEdit: () {},
+                ),
+              );
+            },
+          );
+        }
+      },
+      stream: FirebaseHelper().getAccounts(),
     );
   }
 }
 
 class AccountItem extends StatelessWidget {
+  final account;
+  final onDelete, onEdit;
+  AccountItem(this.account, {this.onDelete, this.onEdit});
+
+  getSummaryText() {
+    if (account["total"] == 0)
+      return Text("No business to be done.");
+    else if (account["total"] > 0)
+      return Row(
+        children: <Widget>[
+          Text("You need to pay "),
+          Text(
+            "Rs ${account["total"]}",
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      );
+    else
+      return Row(
+        children: <Widget>[
+          Text("has to pay you "),
+          Text(
+            "Rs ${account["total"].abs()}",
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -35,8 +85,7 @@ class AccountItem extends StatelessWidget {
           margin: EdgeInsets.all(10),
           child: CircleAvatar(
             radius: 20,
-            backgroundImage: NetworkImage(
-                "https://avatars1.githubusercontent.com/u/10810343?s=460&v=4"),
+            backgroundImage: NetworkImage(account["photo_url"]),
           ),
         ),
         Expanded(
@@ -46,27 +95,20 @@ class AccountItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Text(
-                "Roshan Gautam",
+                account["name"],
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 5),
-              Row(
-                children: <Widget>[
-                  Text("has to pay you "),
-                  Text(
-                    "Rs 2000",
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+              getSummaryText()
             ],
           ),
         ),
         PopupMenuButton(
-          onSelected: (value) {},
+          onSelected: (value) {
+            if (value == "edit")
+              onEdit();
+            else if (value == "delete") onDelete();
+          },
           icon: Icon(
             MdiIcons.dotsVertical,
             color: Theme.of(context).primaryColor,

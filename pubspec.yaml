@@ -16,6 +16,19 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  firebase_core:
+  firebase_analytics:
+  firebase_auth:
+  firebase_database:
+  cloud_firestore:
+  firebase_storage:
+  firebase_messaging:
+  firebase_admob:
+  firebase_performance:
+  shared_preferences:
+  image_picker:
+  path_provider:
+  image:
 
 flutter:
 

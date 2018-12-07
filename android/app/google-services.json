@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "42792339421",
+    "firebase_url": "https://debit-credit-tracker.firebaseio.com",
+    "project_id": "debit-credit-tracker",
+    "storage_bucket": "debit-credit-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42792339421:android:b3e28d423756b4de",
+        "android_client_info": {
+          "package_name": "com.brainants.debitcredit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42792339421-k60mlbfnmsjb7aqqa7uhi2hag1211u7r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaP3m7cF2yTDBhtomsmZnEho7vKwBKt5w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

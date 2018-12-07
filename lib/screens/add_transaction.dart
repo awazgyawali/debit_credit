@@ -5,6 +5,8 @@ import '../screens/base_screen.dart';
 
 import '../widgets/income_expense.dart';
 
+import '../helper.dart';
+
 class AddTransactionScreen extends StatefulWidget {
   final userId;
   AddTransactionScreen(this.userId);
@@ -12,12 +14,91 @@ class AddTransactionScreen extends StatefulWidget {
 }
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
-  var ie = "debit";
-  var currentAccount;
+  var _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  var type = "debit", amount = "", description = "";
+  var accountKey;
+  var accounts = {};
+
+  void initState() {
+    super.initState();
+    FirebaseHelper().getAccounts().listen((data) {
+      setState(() {
+        accounts = data.snapshot.value;
+      });
+    });
+  }
+
+  addTransaction() {
+    if (amount.isEmpty || description.isEmpty)
+      showSnackbar("Please dont leave any field empty.");
+    else if (accountKey == null)
+      showSnackbar("Please choose an account or create one.");
+    else
+      FirebaseHelper()
+          .addTransaction(
+              accountKey, type, accounts[accountKey], amount, description)
+          .then((data) {
+        Navigator.pop(context);
+      }).catchError((err) {
+        print(err);
+      });
+  }
+
+  getItems() {
+    List<DropdownMenuItem> items = [];
+    items.add(
+      DropdownMenuItem(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              "Add Account",
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            Icon(
+              MdiIcons.accountPlus,
+              color: Theme.of(context).primaryColor,
+            )
+          ],
+        ),
+        value: "add",
+      ),
+    );
+    accounts.keys.forEach((key) {
+      items.add(
+        DropdownMenuItem(
+          value: key,
+          child: Text(accounts[key]["name"]),
+        ),
+      );
+    });
+
+    DropdownMenuItem(
+      child: Text("Aawaz"),
+      value: "aawaz",
+    );
+    DropdownMenuItem(
+      child: Text("Roshan"),
+      value: "roshan",
+    );
+
+    return items;
+  }
+
+  showSnackbar(message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      content: Text(message),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
+      scaffoldKey: _scaffoldKey,
       title: "Add Transaction",
       showBack: true,
       child: SingleChildScrollView(
@@ -28,10 +109,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               child: Column(
                 children: <Widget>[
                   IncomeExpense(
-                    value: ie,
+                    value: type,
                     onChanged: (value) {
                       setState(() {
-                        ie = value;
+                        type = value;
                       });
                     },
                   ),
@@ -64,44 +145,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               isDense: true,
                               isExpanded: true,
                               hint: Text("Select Account"),
-                              value: currentAccount,
+                              value: accountKey,
                               onChanged: (value) {
                                 if (value == "add")
                                   Navigator.pushNamed(context, "/addaccount");
                                 else
                                   setState(() {
-                                    currentAccount = value;
+                                    accountKey = value;
                                   });
                               },
-                              items: [
-                                DropdownMenuItem(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        "Add Account",
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      ),
-                                      Icon(
-                                        MdiIcons.accountPlus,
-                                        color: Theme.of(context).primaryColor,
-                                      )
-                                    ],
-                                  ),
-                                  value: "add",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("Aawaz"),
-                                  value: "aawaz",
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("Roshan"),
-                                  value: "roshan",
-                                ),
-                              ],
+                              items: getItems(),
                             ),
                           ),
                         )
@@ -132,6 +185,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         ),
                         Expanded(
                           child: TextField(
+                            onChanged: (value) {
+                              amount = value;
+                            },
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration.collapsed(
                               hintText: "Enter Amount",
@@ -165,6 +221,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         ),
                         Expanded(
                           child: TextField(
+                            onChanged: (value) {
+                              description = value;
+                            },
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration.collapsed(
                                 hintText: "Enter Drescription"),
@@ -175,7 +234,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      addTransaction();
                     },
                     child: Container(
                       padding: EdgeInsets.all(15),

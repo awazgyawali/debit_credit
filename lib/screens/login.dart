@@ -1,16 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import './base_screen.dart';
+
+import '../helper.dart';
 
 class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  var email = "", password = "";
+  var _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  emailLogin() {
+    if (email.isEmpty || password.isEmpty)
+      showSnackbar("Please dont leave any fields empty");
+    else
+      FirebaseHelper().loginViaEmailPassword(email, password).then((user) {
+        Navigator.pushReplacementNamed(context, "/home");
+      }).catchError((err) {
+        if (err is PlatformException)
+          showSnackbar(err.details);
+        else
+          showSnackbar("Something went wrong, please try again later.");
+      });
+  }
+
+  showSnackbar(message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      content: Text(message),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
+      scaffoldKey: _scaffoldKey,
       child: Container(
         margin: EdgeInsets.all(30),
         child: Column(
@@ -56,6 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         Expanded(
                           child: TextField(
+                            onChanged: (value) {
+                              email = value;
+                            },
                             decoration: InputDecoration.collapsed(
                               hintText: "Email",
                             ),
@@ -78,6 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         Expanded(
                           child: TextField(
+                            onChanged: (value) {
+                              password = value;
+                            },
                             decoration: InputDecoration.collapsed(
                               hintText: "Password",
                             ),
@@ -97,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, "/home");
+                emailLogin();
               },
               child: Container(
                 padding: EdgeInsets.all(20),
@@ -165,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     margin: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xff26A6D1),
+                      color: Color(0xff4285F4),
                     ),
                     child: Icon(
                       MdiIcons.google,
@@ -190,8 +224,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       "Sign Up",
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
-                    onTap: () {
-                      Navigator.pushNamed(context, "/register");
+                    onTap: () async {
+                      var data =
+                          await Navigator.pushNamed(context, "/register");
+                      if (data) {
+                        Navigator.pushReplacementNamed(context, "/home");
+                      }
                     },
                   ),
                 ],

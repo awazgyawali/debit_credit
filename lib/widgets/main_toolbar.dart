@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../helper.dart';
+
 class MainToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,11 @@ class MainToolbar extends StatelessWidget {
                     size: 30,
                     color: Theme.of(context).primaryColor,
                   ),
-                  onSelected: (value) {},
+                  onSelected: (value) {
+                    FirebaseHelper().logout().then((data) {
+                      Navigator.pushReplacementNamed(context, "/login");
+                    });
+                  },
                   itemBuilder: (context) => [
                         PopupMenuItem(
                           child: Text(

@@ -28,7 +28,6 @@ class BackToolbar extends StatelessWidget {
               size: 30,
             ),
             onPressed: () {
-              print("object");
               Navigator.pop(context);
             },
           ),

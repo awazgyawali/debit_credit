@@ -1,38 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import './base_screen.dart';
+
+import '../helper.dart';
 
 class AddAccountScreen extends StatefulWidget {
   _AddAccountScreenState createState() => _AddAccountScreenState();
 }
 
 class _AddAccountScreenState extends State<AddAccountScreen> {
+  var _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  var name = "", mobile = "";
+  var image;
+
+  createAccount() {
+    if (name.isEmpty || mobile.isEmpty)
+      showSnackbar("Please dont leave any field empty.");
+    else if (image == null)
+      showSnackbar("Please choose an image to continue");
+    else
+      FirebaseHelper().addFinanceAccount(name, mobile, image).then((data) {
+        Navigator.pop(context);
+      }).catchError((err) {
+        if (err is PlatformException)
+          showSnackbar(err.details);
+        else
+          showSnackbar("Something went wrong, please try again later.");
+      });
+  }
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      this.image = image;
+    });
+  }
+
+  showSnackbar(message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      content: Text(message),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
+      scaffoldKey: _scaffoldKey,
       showBack: true,
       title: "ADD ACCOUNT",
       child: Container(
         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: Column(
           children: <Widget>[
-            Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xff737EB3),
-              ),
-              child: Icon(
-                MdiIcons.cameraEnhanceOutline,
-                color: Colors.white,
-                size: 50,
+            GestureDetector(
+              onTap: () {
+                getImage();
+              },
+              child: Container(
+                height: 130,
+                width: 130,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xff737EB3),
+                  image: image != null
+                      ? DecorationImage(
+                          image: FileImage(image), fit: BoxFit.cover)
+                      : null,
+                ),
+                child: Icon(
+                  MdiIcons.cameraEnhanceOutline,
+                  color: Colors.white,
+                  size: 50,
+                ),
               ),
             ),
             Container(
               padding: EdgeInsets.all(20),
-              child: Text("ADD PROFILE IMAGE"),
+              child: Text("ACCOUNT IMAGE"),
             ),
             Container(
               padding: EdgeInsets.all(15),
@@ -58,6 +107,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   ),
                   Expanded(
                     child: TextField(
+                      onChanged: (value) {
+                        name = value;
+                      },
                       textCapitalization: TextCapitalization.words,
                       decoration:
                           InputDecoration.collapsed(hintText: "Account Name"),
@@ -90,6 +142,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   ),
                   Expanded(
                     child: TextField(
+                      onChanged: (value) {
+                        mobile = value;
+                      },
                       keyboardType: TextInputType.number,
                       decoration:
                           InputDecoration.collapsed(hintText: "Mobile No"),
@@ -100,7 +155,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                createAccount();
               },
               child: Container(
                 padding: EdgeInsets.all(20),

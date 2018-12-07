@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Debit Credit</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -12,6 +14,8 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>debit_credit</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Click allow to choose an image as your profile picture.</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
