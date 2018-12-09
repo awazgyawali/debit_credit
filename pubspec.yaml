@@ -31,6 +31,10 @@ dev_dependencies:
   image:
   google_sign_in:
   flutter_facebook_login:
+  pdf:
+  url_launcher:
+
+
 
 flutter:
 

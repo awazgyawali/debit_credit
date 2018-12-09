@@ -117,17 +117,24 @@ class FirebaseHelper {
         .child("/account_images/$fName")
         .putFile(await compressImage(image));
 
-    await _database
-        .reference()
-        .child("user_data/${user.uid}/accounts")
-        .push()
-        .set({
+    var ref =
+        _database.reference().child("user_data/${user.uid}/accounts").push();
+    await ref.set({
       "name": name,
       "mobile": mobile,
       "photo_url":
           "https://firebasestorage.googleapis.com/v0/b/debit-credit-tracker.appspot.com/o/account_images%2F$fName?alt=media",
       "total": 0,
     });
+
+    return ref.key;
+  }
+
+  Stream getAccountDetail(key) {
+    return _database
+        .reference()
+        .child("user_data/${user.uid}/accounts/$key")
+        .onValue;
   }
 
   Future addTransaction(key, type, account, amount, detail) async {
@@ -161,6 +168,16 @@ class FirebaseHelper {
         .reference()
         .child("user_data/${user.uid}/transactions")
         .onValue;
+  }
+
+  Future getTransactionsOf(accountKey) async {
+    return (await _database
+            .reference()
+            .child("user_data/${user.uid}/transactions")
+            .orderByChild("account_key")
+            .equalTo(accountKey)
+            .once())
+        .value;
   }
 
   Future logout() async {

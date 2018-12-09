@@ -22,8 +22,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   void initState() {
     super.initState();
+
     FirebaseHelper().getAccounts().listen((data) {
       setState(() {
+        if (widget.userId != null) accountKey = widget.userId;
         accounts = data.snapshot.value;
       });
     });
@@ -67,23 +69,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         value: "add",
       ),
     );
-    accounts.keys.forEach((key) {
-      items.add(
-        DropdownMenuItem(
-          value: key,
-          child: Text(accounts[key]["name"]),
-        ),
-      );
-    });
-
-    DropdownMenuItem(
-      child: Text("Aawaz"),
-      value: "aawaz",
-    );
-    DropdownMenuItem(
-      child: Text("Roshan"),
-      value: "roshan",
-    );
+    if (accounts != null)
+      accounts.keys.forEach((key) {
+        items.add(
+          DropdownMenuItem(
+            value: key,
+            child: Text(accounts[key]["name"]),
+          ),
+        );
+      });
 
     return items;
   }
@@ -148,7 +142,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               value: accountKey,
                               onChanged: (value) {
                                 if (value == "add")
-                                  Navigator.pushNamed(context, "/addaccount");
+                                  setState(() async {
+                                    accountKey = await Navigator.pushNamed(
+                                        context, "/addaccount");
+                                  });
                                 else
                                   setState(() {
                                     accountKey = value;

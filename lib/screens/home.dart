@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import './base_screen.dart';
 import './transactions.dart';
 import './accounts.dart';
+import './summary.dart';
 
 import '../widgets/card_tab.dart';
 import '../widgets/main_toolbar.dart';
@@ -13,13 +14,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var selected = 0;
+  var key1 = GlobalKey(), key2 = GlobalKey(), key3 = GlobalKey();
+  var selected = 1;
   PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _pageController = PageController(initialPage: 1);
   }
 
   animateTo(index) {
@@ -102,9 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               controller: _pageController,
               children: <Widget>[
-                TransactionsScreen(),
-                AccountsScreen(),
-                TransactionsScreen(),
+                TransactionsScreen(key: key1),
+                AccountsScreen(key: key2),
+                SummaryScreen(key: key3)
               ],
             ),
           )

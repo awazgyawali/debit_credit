@@ -6,6 +6,7 @@ import "./screens/login.dart";
 import "./screens/register.dart";
 import "./screens/add_account.dart";
 import "./screens/add_transaction.dart";
+import "./screens/account_detail.dart";
 
 void main() => runApp(MyApp());
 
@@ -32,6 +33,11 @@ class MyApp extends StatelessWidget {
           case "addtransaction":
             return MaterialPageRoute(
               builder: (context) => AddTransactionScreen(array[2]),
+            );
+            break;
+          case "account_detail":
+            return MaterialPageRoute(
+              builder: (context) => AccountDetailScreen(array[2]),
             );
             break;
           default:

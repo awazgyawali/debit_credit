@@ -4,6 +4,7 @@ import '../widgets/marquee_text.dart';
 import '../helper.dart';
 
 class TransactionsScreen extends StatefulWidget {
+  TransactionsScreen({Key key}) : super(key: key);
   _TransactionsScreenState createState() => _TransactionsScreenState();
 }
 
@@ -55,53 +56,60 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.all(10),
-          child: CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(transaction["photo_url"]),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        Navigator.pushNamed(
+            context, "/account_detail/${transaction["account_key"]}");
+      },
+      child: Row(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.all(10),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(transaction["photo_url"]),
+            ),
           ),
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Text(
-                transaction["account_name"],
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: <Widget>[
-                  Text(
-                    "Rs ${transaction["amount"]}",
-                    style: TextStyle(
-                      color: getColor(),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: MarqueeWidget(
-                      direction: Axis.horizontal,
-                      animationDuration: Duration(seconds: 3),
-                      child: Text(
-                        "- ${transaction["detail"]}",
-                        maxLines: 1,
-                        style: TextStyle(color: Colors.grey),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Text(
+                  transaction["account_name"],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "Rs ${transaction["amount"]}",
+                      style: TextStyle(
+                        color: getColor(),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                    SizedBox(width: 5),
+                    Expanded(
+                      child: MarqueeWidget(
+                        direction: Axis.horizontal,
+                        animationDuration: Duration(seconds: 3),
+                        child: Text(
+                          "- ${transaction["detail"]}",
+                          maxLines: 1,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

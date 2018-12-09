@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../helper.dart';
+import '../pdf_writer.dart';
 
 class MainToolbar extends StatelessWidget {
   @override
@@ -28,14 +29,16 @@ class MainToolbar extends StatelessWidget {
             right: 0,
             child: Row(
               children: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    MdiIcons.printerSettings,
-                    size: 30,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  onPressed: () {},
-                ),
+                // IconButton(
+                //   icon: Icon(
+                //     MdiIcons.printerSettings,
+                //     size: 30,
+                //     color: Theme.of(context).primaryColor,
+                //   ),
+                //   onPressed: () {
+                //     PDFWriter().writeSomething({});
+                //   },
+                // ),
                 PopupMenuButton(
                   icon: Icon(
                     MdiIcons.dotsVertical,
@@ -65,6 +68,15 @@ class MainToolbar extends StatelessWidget {
                             ),
                           ),
                           value: "about",
+                        ),
+                        PopupMenuItem(
+                          child: Text(
+                            "Logout",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          value: "logout",
                         ),
                       ],
                 ),

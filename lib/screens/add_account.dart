@@ -24,7 +24,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
       showSnackbar("Please choose an image to continue");
     else
       FirebaseHelper().addFinanceAccount(name, mobile, image).then((data) {
-        Navigator.pop(context);
+        Navigator.pop(context, data);
       }).catchError((err) {
         if (err is PlatformException)
           showSnackbar(err.details);
